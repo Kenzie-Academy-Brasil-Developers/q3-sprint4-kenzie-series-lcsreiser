@@ -19,12 +19,15 @@ def get_controller():
         if len(data) == 0:
             return {"data": (data)}, HTTPStatus.OK
 
-        registers = []
+        series = []
 
-        for register in data:
-            registers.append(dict(zip(keys, register)))
+        for serie in data:
+            series.append(dict(zip(keys, serie)))
 
-        return {"data": (registers)}, HTTPStatus.OK
+        for serie in series:
+            serie["released_date"] = serie["released_date"].strftime("%d/%m/%Y")
+
+        return {"data": (series)}, HTTPStatus.OK
 
     except:
         return {"error": "Error"}, HTTPStatus.NOT_FOUND
@@ -36,6 +39,8 @@ def get_by_id_controller(serie_id):
         data = Series.get_by_id_series(serie_id)
 
         series = dict(zip(keys, data))
+
+        series["released_date"] = series["released_date"].strftime("%d/%m/%Y")
 
         return {"data": (series)}, HTTPStatus.OK
 
@@ -53,6 +58,8 @@ def create_controller():
         created_series = Series.create_series(payload)
 
         series = dict(zip(keys, created_series))
+
+        series["released_date"] = series["released_date"].strftime("%d/%m/%Y")
 
         return series, 201
 
